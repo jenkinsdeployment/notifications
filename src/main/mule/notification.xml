@@ -4,7 +4,7 @@
 http://www.mulesoft.org/schema/mule/email http://www.mulesoft.org/schema/mule/email/current/mule-email.xsd http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd http://www.mulesoft.org/schema/mule/mule-apikit http://www.mulesoft.org/schema/mule/mule-apikit/current/mule-apikit.xsd http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd 
 http://www.mulesoft.org/schema/mule/salesforce http://www.mulesoft.org/schema/mule/salesforce/current/mule-salesforce.xsd">
     <http:listener-config name="notification-httpListenerConfig">
-        <http:listener-connection host="0.0.0.0" port="8086" />
+        <http:listener-connection host="0.0.0.0" port="${http.port}" />
     </http:listener-config>
     <apikit:config name="notification-config" api="notification.raml" outboundHeadersMapName="outboundHeaders" httpStatusVarName="httpStatus" />
     <configuration doc:name="Configuration" doc:id="1d1a3792-ce2e-489b-9206-839be3291881" defaultErrorHandler-ref="global_ErrorHandler" />
@@ -18,6 +18,7 @@ http://www.mulesoft.org/schema/mule/salesforce http://www.mulesoft.org/schema/mu
 	<salesforce:sfdc-config name="Salesforce_Config" doc:name="Salesforce Config" doc:id="7c878844-dfce-489c-8582-be61635fc51e" >
 		<salesforce:basic-connection username="prajwal16mule@gmail.com" password="Morshi@2020" securityToken="ao1LyltCH10rw8iZh8Km9Lubq" />
 	</salesforce:sfdc-config>
+	<configuration-properties doc:name="Configuration properties" doc:id="015fb921-e842-49fb-9ae6-e6631360e2e1" file="secure.yaml" />
 	<flow name="notification-main">
         <http:listener config-ref="notification-httpListenerConfig" path="/api/*">
             <http:response statusCode="#[vars.httpStatus default 200]">
