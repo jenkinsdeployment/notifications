@@ -1,0 +1,32 @@
+{
+  "data": {
+    "schema": "8_j4Jvbl5vY1cUg6ykKsKw",
+    "payload": {
+      "LastModifiedDate": "2022-03-28T11:46:48.000Z",
+      "BillingAddress": {
+        "State": "MU"
+      },
+      "ChangeEventHeader": {
+        "commitNumber": 339057558034,
+        "commitUser": "0055j000002hzyHAAQ",
+        "sequenceNumber": 1,
+        "entityName": "Account",
+        "changeType": "UPDATE",
+        "changedFields": [
+          "LastModifiedDate",
+          "BillingAddress.State"
+        ],
+        "changeOrigin": "com/salesforce/api/soap/54.0;client=SfdcInternalAPI/",
+        "transactionKey": "0002f9aa-5393-8953-ca47-6781a88c1176",
+        "commitTimestamp": 1648468008000,
+        "recordIds": [
+          "0015j00000Mo0uvAAB"
+        ]
+      }
+    },
+    "event": {
+      "replayId": 41098821
+    }
+  },
+  "channel": "/data/AccountChangeEvent"
+}

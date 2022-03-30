@@ -1,0 +1,41 @@
+#%RAML 1.0
+title: notification
+description: This api is used to send notification through whatsapp.
+
+/email:
+  post:
+    description: It will send the msg.
+    body:
+      application/json:
+        type: !include /DataType/email-requestdataType.raml
+        example: !include /Example/email-request.json
+    responses:
+      200:
+        body:
+          application/json:
+            type: !include /DataType/email-responsedataType.raml
+            example: !include /Example/email-response.json
+      400:
+          body:
+            application/json:
+              description: This element will define status of failed messages.
+              type: !include Error/error-dataType.raml
+              example: !include /Example/error-400-response-example.json
+      401:
+        body:
+          application/json:
+            description: This element will define status of failed messages.
+            type: !include Error/error-dataType.raml
+            example: !include /Example/error-401-response-example.json
+      404:
+        body:
+          application/json:
+            description: This element will define status of failed messages.
+            type: !include Error/error-dataType.raml
+            example: !include /Example/error-404-response-example.json
+      500:
+        body:
+          application/json:
+            description: This element will define status of failed messages.
+            type: !include Error/error-dataType.raml
+            example: !include /Example/error-500-response-example.json

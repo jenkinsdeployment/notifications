@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mule xmlns:salesforce="http://www.mulesoft.org/schema/mule/salesforce"
+	xmlns:email="http://www.mulesoft.org/schema/mule/email" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:apikit="http://www.mulesoft.org/schema/mule/mule-apikit" xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="
+http://www.mulesoft.org/schema/mule/email http://www.mulesoft.org/schema/mule/email/current/mule-email.xsd http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd http://www.mulesoft.org/schema/mule/mule-apikit http://www.mulesoft.org/schema/mule/mule-apikit/current/mule-apikit.xsd http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd 
+http://www.mulesoft.org/schema/mule/salesforce http://www.mulesoft.org/schema/mule/salesforce/current/mule-salesforce.xsd">
+    <http:listener-config name="notification-httpListenerConfig">
+        <http:listener-connection host="0.0.0.0" port="8086" />
+    </http:listener-config>
+    <apikit:config name="notification-config" api="notification.raml" outboundHeadersMapName="outboundHeaders" httpStatusVarName="httpStatus" />
+    <configuration doc:name="Configuration" doc:id="1d1a3792-ce2e-489b-9206-839be3291881" defaultErrorHandler-ref="global_ErrorHandler" />
+	<email:smtp-config name="Email_SMTP" doc:name="Email SMTP" doc:id="493ab501-c6fa-40f7-b599-247fd20d4476" >
+		<email:smtp-connection host="smtp.gmail.com" port="587" user="pwankhade421@gmail.com" password="Pr@jw@l16" timeoutUnit="MINUTES">
+			<email:properties >
+				<email:property key="mail.smtp.starttls.enable" value="true" />
+			</email:properties>
+		</email:smtp-connection>
+	</email:smtp-config>
+	<salesforce:sfdc-config name="Salesforce_Config" doc:name="Salesforce Config" doc:id="7c878844-dfce-489c-8582-be61635fc51e" >
+		<salesforce:basic-connection username="prajwal16mule@gmail.com" password="Morshi@2020" securityToken="ao1LyltCH10rw8iZh8Km9Lubq" />
+	</salesforce:sfdc-config>
+	<flow name="notification-main">
+        <http:listener config-ref="notification-httpListenerConfig" path="/api/*">
+            <http:response statusCode="#[vars.httpStatus default 200]">
+                <http:headers>#[vars.outboundHeaders default {}]</http:headers>
+            </http:response>
+            <http:error-response statusCode="#[vars.httpStatus default 500]">
+                <http:body>#[payload]</http:body>
+                <http:headers>#[vars.outboundHeaders default {}]</http:headers>
+            </http:error-response>
+        </http:listener>
+        <apikit:router config-ref="notification-config" />
+		<error-handler ref="global_ErrorHandler" />
+    </flow>
+    <flow name="notification-console">
+        <http:listener config-ref="notification-httpListenerConfig" path="/console/*">
+            <http:response statusCode="#[vars.httpStatus default 200]">
+                <http:headers>#[vars.outboundHeaders default {}]</http:headers>
+            </http:response>
+            <http:error-response statusCode="#[vars.httpStatus default 500]">
+                <http:body>#[payload]</http:body>
+                <http:headers>#[vars.outboundHeaders default {}]</http:headers>
+            </http:error-response>
+        </http:listener>
+        <apikit:console config-ref="notification-config" />
+		<error-handler ref="global_ErrorHandler" />
+    </flow>
+    <flow name="post:\email:application\json:notification-config">
+        <set-payload value="#[%dw 2.0&#10;output application/json&#10;---&#10;payload]" doc:name="Set Payload" doc:id="9c6872e8-dfe8-4380-8904-b420bfc5de1f" />
+		<ee:transform doc:name="Transform Message" doc:id="44e03d11-e5de-4a79-92b8-bbc99ca65264" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+var inputData = read(payload.text, "application/json")
+---
+{
+"to": payload.to,
+"from": payload.from,
+"channel": payload.channel,
+"message_uuid": payload.message_uuid,
+"timestamp": payload.timestamp >> "IST",
+"text": inputData
+}]]></ee:set-payload>
+			</ee:message>
+			<ee:variables >
+				<ee:set-variable variableName="a" ><![CDATA[%dw 2.0
+output application/json
+var inputData = payload.text
+---
+read(inputData , "application/json")]]></ee:set-variable>
+			</ee:variables>
+		</ee:transform>
+		<email:send doc:name="Send" doc:id="3b185d80-e7a9-49d8-9be1-0918bce358b3" config-ref="Email_SMTP">
+			<email:to-addresses >
+				<email:to-address value="disguisedfox74@gmail.com" />
+			</email:to-addresses>
+			<email:body contentType="text/plain" />
+		</email:send>
+		<ee:transform doc:name="Transform Message" doc:id="74b269ee-8776-44a2-aa66-bcec402e69ea" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+[{
+  firstName__c : vars.a.firstname,
+  lastName__c : vars.a.lastname,
+  orderId__c : vars.a.orderId,
+  orderDate__c : payload.timestamp,
+  email__c : vars.a.email,
+  phoneNumber__c : vars.a.phoneNumber,
+  country__c : vars.a.country,			
+  city__c : vars.a.city
+}]]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<salesforce:create doc:name="Create" doc:id="cd90a9c8-1c0e-42fe-b49d-daa8a9873c93" config-ref="Salesforce_Config" type="emp_profiles__c"/>
+		<logger level="INFO" doc:name="Logger" doc:id="d2ae4981-baf5-4fba-a040-eb8655deb73f" message="#[payload]"/>
+		<error-handler ref="global_ErrorHandler" />
+            </flow>
+	<flow name="notificationFlow" doc:id="27e740d6-f2d7-4018-802f-4ff8e1b69f7a" >
+		<salesforce:subscribe-channel-listener doc:name="Subscribe channel listener" doc:id="03e30385-6f8d-4d69-abba-f05d4ce4ffca" config-ref="Salesforce_Config" streamingChannel="/data/emp_profiles__ChangeEvent"/>
+		<logger level="INFO" doc:name="Logger" doc:id="a20dd418-40f2-46d9-ae33-20d8206a73cc" message="#[payload]"/>
+		<ee:transform doc:name="Transform Message" doc:id="9385948b-33d9-4358-b3fa-7b365d955518" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+{
+	"to": "fdap40qNBWnqHpRTGKpsJD:APA91bEuuFH10jx2_t03d8jplCjK1Ie1fJhsmz_7hnFnLy2NongpTcWxYVFB_BjVWzaHowvDTM3U9v7PU8b8qnn3zTUOD2Lqa3zJALYsJcn4CzBzeZXkBFkWl7gBjKND93cFcSQsKlBu",
+	"collapse_key": "type_a",
+	"notification": {
+		"body": "</br>SF Event Notification",
+		"title": "Title : Notification",
+		"image": "https://www.learndash.com/wp-content/uploads/Notification-Add-on.png"
+	},
+	"data": {
+		"body": payload.data.payload,
+		"title": "Title : Data",
+		"image": "https://metaltechalley.com/wp-content/uploads/2017/09/data.jpg"
+	}
+}]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<http:request method="POST" doc:name="Request" doc:id="051b510c-f89d-479e-83e2-f4323309e8ed" url="https://fcm.googleapis.com/fcm/send">
+			<http:headers ><![CDATA[#[output application/java
+---
+{
+	"Authorization" : "key=AAAAfS9hE1c:APA91bGe6a2y9d4eeJA1h4ItasLGgcsQZLFLYC9F9Ie6gnP7wBR_zgnz0b3Vd7oHkMBdxYiELZW9tfgQ8RspQr4qWTgAYZTD4FC2bZRJCa-YxUiU9HDFxySM08hVRo-z4Zo7R4rtvHUC",
+	"Content-Type" : "application/json"
+}]]]></http:headers>
+		</http:request>
+	</flow>
+</mule>

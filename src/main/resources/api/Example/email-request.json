@@ -1,0 +1,9 @@
+{
+  "to": "14157386102",
+  "from": "918484896905",
+  "channel": "whatsapp",
+  "message_uuid": "a3ca1259-0170-477a-b998-4001ea61bfd7",
+  "timestamp": "2022-03-27T09:10:05Z",
+  "message_type": "text",
+  "text": "{\"Description\": \"Order placed successfully\",\"firstname\": \"Z\", \"lastname\": \"Z\", \"orderId\": \"1244abc\"}"
+}

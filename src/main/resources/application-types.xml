@@ -1,0 +1,63 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<types:mule xmlns:types="http://www.mulesoft.org/schema/mule/types">
+  <types:catalog>
+    <types:type name="output" format="json">
+      <types:shape format="weave" example="examples/new 28-3.json"><![CDATA[%dw 2.0
+
+type output = {|
+  to: String, 
+  collapse_key: String, 
+  notification: {|
+    body: String, 
+    title: String, 
+    image: String
+  |}, 
+  data: {|
+    body: String, 
+    title: String, 
+    image: String
+  |}
+|} {"example": "{\\\"to\\\":\\\"fbq7iuJdPVxWk8Cd8QWD3R:APA91bFJyuAHZQxtrzt3E_sZhwb5EsdrTYXEjYuHhcjf9RzuF20cMSMnuVvDNyc02Z34n2hQyFl-CdFLq1fKKHZ3f7JyNACK80FgBqp9U2ItzDDwUwzGwIv4rD3IsCCrygIOvZ6qgF-R\\\",\\\"collapse_key\\\":\\\"type_a\\\",\\\"notification\\\":{\\\"body\\\":\\\"<\\/br>SF Event Notification\\\",\\\"title\\\":\\\"Title : Notification\\\",\\\"image\\\":\\\"https:\\/\\/www.learndash.com\\/wp-content\\/uploads\\/Notification-Add-on.png\\\"},\\\"data\\\":{\\\"body\\\":\\\"Body : Data\\\",\\\"title\\\":\\\"Title : Data\\\",\\\"image\\\":\\\"https:\\/\\/metaltechalley.com\\/wp-content\\/uploads\\/2017\\/09\\/data.jpg\\\"}}"}
+
+]]></types:shape>
+    </types:type>
+    <types:type name="input" format="json">
+      <types:shape format="weave" example="examples/new 29.json"><![CDATA[%dw 2.0
+
+type input = {|
+  data: {|
+    schema: String, 
+    payload: {|
+      LastModifiedDate: String, 
+      BillingAddress: {| State: String |}, 
+      ChangeEventHeader: {|
+        commitNumber: Number {"typeId": "double"}, 
+        commitUser: String, 
+        sequenceNumber: Number {"typeId": "int"}, 
+        entityName: String, 
+        changeType: String, 
+        changedFields: Array<String>, 
+        changeOrigin: String, 
+        transactionKey: String, 
+        commitTimestamp: Number {"typeId": "double"}, 
+        recordIds: Array<String>
+      |}
+    |}, 
+    event: {| replayId: Number {"typeId": "int"} |}
+  |}, 
+  channel: String
+|} {"example": "{\\\"data\\\":{\\\"schema\\\":\\\"8_j4Jvbl5vY1cUg6ykKsKw\\\",\\\"payload\\\":{\\\"LastModifiedDate\\\":\\\"2022-03-28T11:46:48.000Z\\\",\\\"BillingAddress\\\":{\\\"State\\\":\\\"MU\\\"},\\\"ChangeEventHeader\\\":{\\\"commitNumber\\\":339057558034,\\\"commitUser\\\":\\\"0055j000002hzyHAAQ\\\",\\\"sequenceNumber\\\":1,\\\"entityName\\\":\\\"Account\\\",\\\"changeType\\\":\\\"UPDATE\\\",\\\"changedFields\\\":[\\\"LastModifiedDate\\\",\\\"BillingAddress.State\\\"],\\\"changeOrigin\\\":\\\"com\\/salesforce\\/api\\/soap\\/54.0;client=SfdcInternalAPI\\/\\\",\\\"transactionKey\\\":\\\"0002f9aa-5393-8953-ca47-6781a88c1176\\\",\\\"commitTimestamp\\\":1648468008000,\\\"recordIds\\\":[\\\"0015j00000Mo0uvAAB\\\"]}},\\\"event\\\":{\\\"replayId\\\":41098821}},\\\"channel\\\":\\\"\\/data\\/AccountChangeEvent\\\"}"}
+
+]]></types:shape>
+    </types:type>
+  </types:catalog>
+  <types:enrichment select="#9385948b-33d9-4358-b3fa-7b365d955518">
+    <types:processor-declaration>
+      <types:output-event>
+        <types:message>
+          <types:payload type="output"/>
+        </types:message>
+      </types:output-event>
+    </types:processor-declaration>
+  </types:enrichment>
+</types:mule>

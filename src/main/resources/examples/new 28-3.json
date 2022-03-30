@@ -1,0 +1,16 @@
+{
+ "to" : "fbq7iuJdPVxWk8Cd8QWD3R:APA91bFJyuAHZQxtrzt3E_sZhwb5EsdrTYXEjYuHhcjf9RzuF20cMSMnuVvDNyc02Z34n2hQyFl-CdFLq1fKKHZ3f7JyNACK80FgBqp9U2ItzDDwUwzGwIv4rD3IsCCrygIOvZ6qgF-R",
+ "collapse_key" : "type_a",
+ "notification" : {
+     "body" : "</br>SF Event Notification",
+     "title": "Title : Notification",
+     "image":"https://www.learndash.com/wp-content/uploads/Notification-Add-on.png"
+     
+ },
+ "data" : {
+     "body" : "Body : Data",
+     "title": "Title : Data",
+     "image":"https://metaltechalley.com/wp-content/uploads/2017/09/data.jpg"
+     
+ }
+}

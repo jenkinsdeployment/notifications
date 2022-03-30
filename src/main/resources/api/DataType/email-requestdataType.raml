@@ -1,0 +1,32 @@
+#%RAML 1.0 DataType
+
+type: object
+properties:
+  to:
+    type: string
+    required: true
+    example: "14157386102"
+  from:
+    type: string
+    required: true
+    example: "918484896905"
+  channel:
+    type: string
+    required: false
+    example: "whatsapp"
+  message_uuid:
+    type: string
+    required: false
+    example: "a3ca1259-0170-477a-b998-4001ea61bfd7"
+  timestamp:
+    type: string
+    required: false
+    example: "2022-03-28T09:33:30Z"
+  message_type:
+    type: string
+    required: true
+    example: "Consultant"
+  text:
+    type: string
+    required: false
+    example: "Java Developer"
