@@ -39,3 +39,14 @@ description: This api is used to send notification through whatsapp.
             description: This element will define status of failed messages.
             type: !include Error/error-dataType.raml
             example: !include /Example/error-500-response-example.json
+            
+
+/status:
+  get:
+    description: This will show api status.
+    responses:
+      200:
+        body:
+          application/json:
+            type: !include /DataType/emp-status-dataType.raml
+            example: !include /Example/emp-status-response.json                                                

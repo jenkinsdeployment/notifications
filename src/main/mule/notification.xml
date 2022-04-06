@@ -99,6 +99,20 @@ output application/json
 		<logger level="INFO" doc:name="Logger" doc:id="d2ae4981-baf5-4fba-a040-eb8655deb73f" message="#[payload]"/>
 		<error-handler ref="global_ErrorHandler" />
             </flow>
+	<flow name="get:\status:notification-config" doc:id="dffd668e-673e-4fe3-bb2e-a4c1a5751000" >
+		<ee:transform doc:name="Transform Message" doc:id="a20acfcd-faa8-4c22-96ff-7e4c3f4da9b3">
+			<ee:message>
+				<ee:set-payload><![CDATA[%dw 2.0
+output application/json
+---
+ {
+	"status": "200",
+	"msg": "API is up and running."
+}]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<error-handler ref="global_ErrorHandler" />
+	</flow>
 	<flow name="notificationFlow" doc:id="27e740d6-f2d7-4018-802f-4ff8e1b69f7a" >
 		<salesforce:subscribe-channel-listener doc:name="Subscribe channel listener" doc:id="03e30385-6f8d-4d69-abba-f05d4ce4ffca" config-ref="Salesforce_Config" streamingChannel="/data/emp_profiles__ChangeEvent"/>
 		<logger level="INFO" doc:name="Logger" doc:id="a20dd418-40f2-46d9-ae33-20d8206a73cc" message="#[payload]"/>
